@@ -26,40 +26,22 @@ class SPClient():
             self.ctx = ClientContext(self.url).with_credentials(self.user_credentials)
         return self.ctx
     
-    def get_folders(self, folder_path: str) -> list[dict]:
+    def get_folders(self, folder_path: str, recursive: bool) -> list[dict]:
         web = self.static_ctx.web
         self.ctx.load(web)
         self.ctx.execute_query()
         server_relative_url = web.properties['ServerRelativeUrl']
         folder_server_relative_url = server_relative_url + folder_path
-        root = self.ctx.web.get_folder_by_server_relative_url(folder_server_relative_url)
-        self.ctx.load(root)
-        self.ctx.execute_query()
-        folders = root.folders
-        self.ctx.load(folders)
-        self.ctx.execute_query()
+        root_folder = self.ctx.web.get_folder_by_server_relative_url(folder_server_relative_url)
+        folders = root_folder.get_folders(recursive=recursive).execute_query()
         return [folder.properties for folder in folders]
     
-    def get_files_in_folder_path(self, folder_path: str) -> list[dict]:
-        web = self.static_ctx.web
-        self.ctx.load(web)
-        self.ctx.execute_query()
-        server_relative_url = web.properties['ServerRelativeUrl']
-        folder_server_relative_url = server_relative_url + folder_path
-        root = self.ctx.web.get_folder_by_server_relative_url(folder_server_relative_url)
-        self.ctx.load(root)
-        self.ctx.execute_query()
-        files = root.files
-        self.ctx.load(files)
-        self.ctx.execute_query()
-        return [file.properties for file in files]
-    
-    def get_files(self, folder_path: str) -> list[dict]:
+    def get_files(self, folder_path: str, recursive: bool) -> list[dict]:
         web = self.static_ctx.web
         self.ctx.load(web)
         self.ctx.execute_query()
         root_folder = self.ctx.web.get_folder_by_server_relative_path(folder_path)
-        files = root_folder.get_files(True).execute_query()
+        files = root_folder.get_files(recursive=recursive).execute_query()
         return [file.properties for file in files]
 
 def get_sharepoint_context_using_user(url, username, password):

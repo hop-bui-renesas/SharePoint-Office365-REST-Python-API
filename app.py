@@ -21,17 +21,14 @@ client = SPClient(url=URL, username=USERNAME, password=PASSWORD)
 
 @app.post("/folders")
 def read_folders(request: FoldersRequest) -> FoldersResponse:
-    folders = client.get_folders(request.folder_path)
+    recursive = False if request.recursive is None else request.recursive
+    folders = client.get_folders(folder_path=request.folder_path, recursive=recursive)
     return FoldersResponse(folders=folders)
-
-@app.post("/files_in_folder")
-def read_files_in_folder(request: FilesRequest) -> FilesResponse:
-    files = client.get_files_in_folder_path(request.folder_path)
-    return FilesResponse(files=files)
 
 @app.post("/files")
 def read_files(request: FilesRequest) -> FilesResponse:
-    files = client.get_files(request.folder_path)
+    recursive = False if request.recursive is None else request.recursive
+    files = client.get_files(folder_path=request.folder_path, recursive=recursive)
     return FilesResponse(files=files)
 
 if __name__ == "__main__":
