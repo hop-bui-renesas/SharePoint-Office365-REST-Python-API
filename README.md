@@ -14,7 +14,9 @@ python app.py
 
 ## APIs
 
-1. List all folders in folder_path (not recursively)
+1. List all folders in folder_path (not recursively).
+
+Example:
 
 ```bash
 curl -X 'POST' \
@@ -29,6 +31,8 @@ curl -X 'POST' \
 
 2. List all folders in folder_path (recursively)
 
+Example: 
+
 ```bash
 curl -X 'POST' \
   'http://localhost:8000/folders' \
@@ -41,6 +45,8 @@ curl -X 'POST' \
 ```
 
 3. List all files in folder_path (not recursively)
+
+Example:
 
 ```bash
 curl -X 'POST' \
@@ -55,6 +61,8 @@ curl -X 'POST' \
 
 4. List all files in folder_path (recursively)
 
+Example:
+
 ```bash
 curl -X 'POST' \
   'http://localhost:8000/files' \
@@ -65,3 +73,4 @@ curl -X 'POST' \
   "recursive": true
 }'
 ```
+
