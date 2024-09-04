@@ -40,6 +40,20 @@ class SPClient():
         self.ctx.execute_query()
         return [folder.properties for folder in folders]
     
+    def get_files_in_folder_path(self, folder_path: str) -> list[dict]:
+        web = self.static_ctx.web
+        self.ctx.load(web)
+        self.ctx.execute_query()
+        server_relative_url = web.properties['ServerRelativeUrl']
+        folder_server_relative_url = server_relative_url + folder_path
+        root = self.ctx.web.get_folder_by_server_relative_url(folder_server_relative_url)
+        self.ctx.load(root)
+        self.ctx.execute_query()
+        files = root.files
+        self.ctx.load(files)
+        self.ctx.execute_query()
+        return [file.properties for file in files]
+    
     def get_files(self, folder_path: str) -> list[dict]:
         web = self.static_ctx.web
         self.ctx.load(web)
