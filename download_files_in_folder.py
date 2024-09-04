@@ -46,17 +46,17 @@ if __name__ == '__main__':
     ctx.load(files)
     ctx.execute_query()
 
+    saved_path = "./saved"
+
     for i, file in enumerate(files):
         print(i, "File path: ", file)
     
-    rel_path_to_file = folder_path + urllib.parse.quote(file.properties["Name"]).strip()
+        rel_path_to_file = folder_path + urllib.parse.quote(file.properties["Name"]).strip()
 
-    print(rel_path_to_file)
+        print(rel_path_to_file)
 
-    saved_path = "./saved"
+        source_file = ctx.web.get_file_by_server_relative_url(rel_path_to_file)
+        local_file_name = os.path.join(saved_path, os.path.basename(file.properties["Name"]))
 
-    source_file = ctx.web.get_file_by_server_relative_url(rel_path_to_file)
-    local_file_name = os.path.join(saved_path, os.path.basename(file.properties["Name"]))
-
-    with open(local_file_name, "wb") as local_file:
-        source_file.download_session(local_file, print_download_progress).execute_query()
+        with open(local_file_name, "wb") as local_file:
+            source_file.download_session(local_file, print_download_progress).execute_query()
