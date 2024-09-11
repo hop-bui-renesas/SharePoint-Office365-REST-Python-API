@@ -1,8 +1,6 @@
 import os
 from client import SPClient
 
-from client import get_sharepoint_context_using_user, download_SharePointFile
-
 from utils import print_download_progress
 
 import urllib.parse
@@ -13,10 +11,12 @@ load_dotenv()
 
 if __name__ == '__main__':
     sharepoint_url = "https://renesasgroup.sharepoint.com/sites/TransferofInformationTOIBroadcastChannel"
-    username = os.environ["user_id"]
-    password = os.environ["password"]
-    
-    ctx = get_sharepoint_context_using_user(sharepoint_url, username, password)
+    USERNAME = os.environ["user_id"]
+    PASSWORD = os.environ["password"]
+
+    client = SPClient(url=sharepoint_url, username=USERNAME, password=PASSWORD)
+
+    ctx = client.static_ctx
 
     web = ctx.web
     ctx.load(web)
