@@ -1,9 +1,15 @@
+import os
 import requests
 import time
 import json
 
 FOLDER_ENDPOINT = "http://localhost:8000/folders"
 FILES_ENDPOINT = "http://localhost:8000/files"
+
+LOCAL_DIR = "saved/"
+
+if not os.path.exists(LOCAL_DIR):
+    os.makedirs(LOCAL_DIR)
 
 folder_name = "Shared Documents/TOI Session Archive"
 
@@ -35,7 +41,9 @@ def get_folders_files_recursively(folder_name):
 
     payload = {
         "folder_path": folder_name,
-        "recursive": False
+        "recursive": False,
+        "is_download": True,
+        "local_dir": "saved/"
     }
     response = requests.post(FILES_ENDPOINT, json=payload)
     files = response.json()["files"]

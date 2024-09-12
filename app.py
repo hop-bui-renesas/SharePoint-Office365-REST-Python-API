@@ -29,6 +29,8 @@ def read_folders(request: FoldersRequest) -> FoldersResponse:
 def read_files(request: FilesRequest) -> FilesResponse:
     recursive = False if request.recursive is None else request.recursive
     files = client.get_files(folder_path=request.folder_path, recursive=recursive)
+    if request.is_download:
+        client.download_files(files=files, local_dir=request.local_dir)
     return FilesResponse(files=files)
 
 if __name__ == "__main__":

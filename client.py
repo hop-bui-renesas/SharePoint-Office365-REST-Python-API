@@ -1,6 +1,9 @@
+import os
+
 from office365.runtime.auth.user_credential import UserCredential
 from office365.sharepoint.client_context import ClientContext
 
+from utils import print_download_progress
 class SPClient():
     username: str
     password: str
@@ -37,3 +40,12 @@ class SPClient():
         root_folder = self.ctx.web.get_folder_by_server_relative_path(folder_path)
         files = root_folder.get_files(recursive=recursive).execute_query()
         return [file.properties for file in files]
+    
+    def download_files(self, files: list[dict], local_dir: str):
+        for file in files:
+            file_name = file["Name"]
+            source_file = self.ctx.web.get_file_by_server_relative_url(file["ServerRelativeUrl"])
+            local_file_name = os.path.join(local_dir, os.path.basename(file_name))
+
+            with open(local_file_name, "wb") as local_file:
+                source_file.download_session(local_file, print_download_progress).execute_query()

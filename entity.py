@@ -10,6 +10,8 @@ class FoldersResponse(BaseModel):
 class FilesRequest(BaseModel):
     folder_path: str
     recursive: bool
+    is_download: bool
+    local_dir: str
 
 class FilesResponse(BaseModel):
     files: list[dict]
