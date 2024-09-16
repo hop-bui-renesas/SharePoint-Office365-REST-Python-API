@@ -1,4 +1,5 @@
 import os
+import time
 
 from office365.runtime.auth.user_credential import UserCredential
 from office365.sharepoint.client_context import ClientContext
@@ -41,11 +42,34 @@ class SPClient():
         files = root_folder.get_files(recursive=recursive).execute_query()
         return [file.properties for file in files]
     
-    def download_files(self, files: list[dict], local_dir: str):
+    def download_files(self, files: list[dict], local_dir: str) -> list[dict]:
+        download_result = []
         for file in files:
+            start_time  = time.time()
+            error = False
             file_name = file["Name"]
-            source_file = self.ctx.web.get_file_by_server_relative_url(file["ServerRelativeUrl"])
+            file_path = file["ServerRelativeUrl"]
+            source_file = self.ctx.web.get_file_by_server_relative_url(file_path)
             local_file_name = os.path.join(local_dir, os.path.basename(file_name))
-
-            with open(local_file_name, "wb") as local_file:
-                source_file.download_session(local_file, print_download_progress).execute_query()
+            size = 0
+            try:
+                with open(local_file_name, "wb") as local_file:
+                    source_file.download_session(local_file, print_download_progress).execute_query()
+                size = os.path.getsize(local_file_name)
+            except Exception as e:
+                print(e)
+                error = True
+            end_time = time.time()
+            print("Start time", start_time)
+            print("End time", end_time)
+            download_result.append({
+                "filename": file_name,
+                "filepath": file_path,
+                "error": error,
+                "start_time": str(start_time),
+                "end_time": str(end_time),
+                "duration": str(end_time - start_time),
+                "size": size
+            })
+        
+        return download_result

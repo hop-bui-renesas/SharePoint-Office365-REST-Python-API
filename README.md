@@ -74,3 +74,8 @@ curl -X 'POST' \
 }'
 ```
 
+## Script
+
+```bash
+python get_folders_files_recursively.py --folder-name "Shared Documents/TOI Session Archive/2024 Q3/TOI- AWS Cloud Connectivity RA RX CK V2" --local-dir saved
+```
